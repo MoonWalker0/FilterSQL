@@ -5,8 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FilterSQL"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="FilterSQL" Height="350" Width="525">
     <Grid>
-        
+        <GroupBox Header="File handling" HorizontalAlignment="Left" Height="60" Margin="17,10,0,0" VerticalAlignment="Top" Width="132">
+            <Grid>
+                <Button Content="CVS to database" HorizontalAlignment="Left" Margin="8,10,0,0" VerticalAlignment="Top" Width="101" Height="25" Click="ToDBButton" ToolTip="Select folder with CVS files and convert it into SQL DB."/>
+            </Grid>
+        </GroupBox>
+
     </Grid>
 </Window>
