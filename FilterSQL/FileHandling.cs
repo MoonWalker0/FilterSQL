@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Windows;
@@ -13,6 +14,7 @@ namespace FilterSQL
             SQLiteConnection database; /*DB instantion*/
             SQLiteCommand command;     /*SQL command to be sent*/
             string dataToBeEntered;    /*SQL command*/
+            int iteration;             
 
             /*Create new database if there is required*/
             if (newDatabase)
@@ -42,6 +44,7 @@ namespace FilterSQL
             directory = new DirectoryInfo(pathFolder);
 
             /*All folders in selected folder*/
+            iteration = 1;
             foreach (var folder in directory.GetDirectories())
             {
                 /*All files in each selected folder*/
@@ -61,9 +64,9 @@ namespace FilterSQL
                                 var values = line.Split(';');
 
                                 dataToBeEntered = "INSERT INTO CardInfo " +
-                                                  "(ID, category, date, realMoney, payed, " +
+                                                  "(MIFARE, category, date, realMoney, payed, " +
                                                   "enteredMoney, cashlessMoney, autoReload) values " +
-                                                  "(\"" + values[0] + "\"," +                            /* ID - column A */
+                                                  "(\"" + values[0] + "\", " +                               /* ID - column A */
                                                   values[1].ToString() + ", " +                          /* category - column B */
                                                   "\"" + Utilities.ToSQLDateFormat(values[2]) + "\", " + /* date - column C */
                                                   values[5].ToString() + ", " +                          /* realMoney - column F */
@@ -75,6 +78,7 @@ namespace FilterSQL
 
                                 command = new SQLiteCommand(dataToBeEntered, database);
                                 command.ExecuteNonQuery();
+                                iteration++;
                             }
                         }
                     }
@@ -84,11 +88,49 @@ namespace FilterSQL
                         return false;
                     }
                 }
-            }
+            } 
             database.Close();
 
             return true;
         }
+
+        public static int DatabaseLength(string path) /*TO BE REMOVED?*/
+        {
+            /*Returns number of rows of database*/
+            Object output;
+            SQLiteConnection database = new SQLiteConnection("Data Source=" + path + ";Version=3;");
+            database.Open();
+
+            string table = "SELECT COUNT(*) FROM CardInfo";
+
+            SQLiteCommand command = new SQLiteCommand(table, database);
+            output = command.ExecuteScalar();
+            database.Close();
+
+            return Convert.ToInt32(output);
+        }
+
+        public static List<ListDisplay.ListItem> LoadAllByDate(string path)
+        { 
+            string commandString              = "SELECT * FROM CardInfo ORDER BY date";
+            SQLiteConnection database         = new SQLiteConnection("Data Source=" + path + ";Version=3;");
+            SQLiteCommand command             = new SQLiteCommand(commandString, database);
+            List<ListDisplay.ListItem> output = new List<ListDisplay.ListItem>();
+            SQLiteDataReader rowData;
+
+            database.Open();
+            rowData = command.ExecuteReader();
+              
+            /*Populate collection*/
+            while(rowData.Read())
+            {                                
+                output.Add(ListDisplay.FormListItem(rowData)); 
+            }
+
+            database.Close();
+
+            return output;
+        } 
 
         bool CreateDatabase(string path)
         {
@@ -104,7 +146,8 @@ namespace FilterSQL
             SQLiteConnection database = new SQLiteConnection("Data Source=" + path + ";Version=3;");
             database.Open();
 
-            string table = "CREATE TABLE CardInfo (ID VARCHAR(10), " +
+            string table = "CREATE TABLE CardInfo (" +
+                                                    "MIFARE VARCHAR(10), " +
                                                     "category INT, " +
                                                     "date TIMESTAMP, " +
                                                     "realMoney FLOAT, " +

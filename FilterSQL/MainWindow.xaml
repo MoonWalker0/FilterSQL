@@ -5,13 +5,31 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FilterSQL"
         mc:Ignorable="d"
-        Title="FilterSQL" Height="350" Width="525">
+        Title="FilterSQL" Height="350" Width="736.2">
     <Grid>
-        <GroupBox Header="File handling" HorizontalAlignment="Left" Height="60" Margin="17,10,0,0" VerticalAlignment="Top" Width="132">
+        <GroupBox Header="File handling" HorizontalAlignment="Left" Height="94" Margin="17,10,0,0" VerticalAlignment="Top" Width="132">
             <Grid>
                 <Button Content="CVS to database" HorizontalAlignment="Left" Margin="8,10,0,0" VerticalAlignment="Top" Width="101" Height="25" Click="ToDBButton" ToolTip="Select folder with CVS files and convert it into SQL DB."/>
+                <Button Content="Load database" HorizontalAlignment="Left" Margin="8,40,0,0" VerticalAlignment="Top" Width="99" Height="25" Click="LoadDBButton"/>
             </Grid>
         </GroupBox>
+        <ListView Name="MainList" HorizontalAlignment="Left" Height="217" Margin="154,10,0,0" VerticalAlignment="Top" Width="566" SelectionChanged="MainListSelectionChanged">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="ID"              DisplayMemberBinding="{Binding ItemID}"/>
+                    <GridViewColumn Header="Cat."            DisplayMemberBinding="{Binding ItemCategory}"/>
+                    <GridViewColumn Header="Data"            DisplayMemberBinding="{Binding ItemDate}"/>
+                    <GridViewColumn Header="Cashless saldo"  DisplayMemberBinding="{Binding ItemCashlessSaldo}"/>
+                    <GridViewColumn Header="Money saldo"     DisplayMemberBinding="{Binding ItemMoneySaldo}"/>
+                    <GridViewColumn Header="Purhcase"        DisplayMemberBinding="{Binding ItemPurchase}"/>
+                    <GridViewColumn Header="Cash rld."       DisplayMemberBinding="{Binding ItemCashReload}"/>
+                    <GridViewColumn Header="Auto rld."       DisplayMemberBinding="{Binding ItemAutoReload}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <TextBox Name="textBoxSelectedID" HorizontalAlignment="Left" Height="23" Margin="34,131,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="94"/>
+        <TextBlock HorizontalAlignment="Left" Margin="34,115,0,0" TextWrapping="Wrap" Text="Select card ID" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>
